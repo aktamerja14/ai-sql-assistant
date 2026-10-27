@@ -37,3 +37,22 @@ def create_database():
 if __name__ == "__main__":
     create_database()
     print("Database created successfully!")
+
+
+
+def execute_query(sql):
+    conn = sqlite3.connect("employees.db")
+    cursor = conn.cursor()
+
+    # Allow only SELECT queries
+    if not sql.strip().upper().startswith("SELECT"):
+        conn.close()
+        raise ValueError("Only SELECT queries are allowed.")
+
+    cursor.execute(sql)
+    columns = [column[0] for column in cursor.description]
+    rows = cursor.fetchall()
+
+    conn.close()
+
+    return columns, rows
